@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foster Dogs Available</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Foster Dogs Looking for Homes</h1>
+            <div class="filters">
+                <input type="text" id="search" placeholder="Search by name, breed...">
+                <select id="size-filter">
+                    <option value="">All Sizes</option>
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+                </select>
+                <select id="rescue-filter">
+                    <option value="">All Rescues</option>
+                </select>
+            </div>
+        </header>
+
+        <div id="loading">Loading dogs...</div>
+        <div id="error" style="display: none;"></div>
+        <div id="dogs-grid"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

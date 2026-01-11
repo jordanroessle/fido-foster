@@ -39,7 +39,7 @@ def pull_cantu_foundation():
             # Parse the more_info text
             age = ''
             gender = ''
-            size = ''
+            weight = ''
             breed = ''
             description = ''
 
@@ -58,7 +58,7 @@ def pull_cantu_foundation():
 
             if 'Size:' in fields_text:
                 third_split = fields_text.split('Size:', 1)
-                size = third_split[1].strip()
+                weight = third_split[1].split('lbs', 1)[0].strip()
                 fields_text = third_split[0]
 
             if 'Gender:' in fields_text:
@@ -75,14 +75,14 @@ def pull_cantu_foundation():
                 'Breed': breed,
                 'Age': age,
                 'Gender': gender,
-                'Size': size,
+                'Weight': weight,
                 'Description': description,
                 'Image_URL': photo,
                 'Rescue_Name': 'Cantu Foundation',
                 'Their_Id': dog_id
             })
 
-
+        print(f'Scraped {len(dogs)} dogs from Cantu Foundation')
     except Exception as e:
         print(f'Error scraping Cantu Foundation: {e}')
 

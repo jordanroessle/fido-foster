@@ -81,7 +81,7 @@ def update_sheet_with_dogs(spreadsheet: gspread.Spreadsheet, dogs):
                 dog.get('Breed', ''),
                 dog.get('Age', ''),
                 dog.get('Gender', ''),
-                dog.get('Size', ''),
+                dog.get('Weight', ''),
                 dog.get('Description', ''),
                 dog.get('Image_URL', ''),
                 dog.get('Rescue_Name', ''),
@@ -107,7 +107,7 @@ def update_sheet_with_dogs(spreadsheet: gspread.Spreadsheet, dogs):
             existing_dog.get('Breed', '') != dog.get('Breed', '') or
             existing_dog.get('Age', '') != dog.get('Age', '') or
             existing_dog.get('Gender', '') != dog.get('Gender', '') or
-            existing_dog.get('Size', '') != dog.get('Size', '') or
+            str(existing_dog.get('Weight', '')) != dog.get('Weight', '') or
             existing_dog.get('Description', '') != dog.get('Description', '') or
             existing_dog.get('Image_URL', '') != dog.get('Image_URL', '')
         )
@@ -119,7 +119,7 @@ def update_sheet_with_dogs(spreadsheet: gspread.Spreadsheet, dogs):
                 dog.get('Breed', ''),
                 dog.get('Age', ''),
                 dog.get('Gender', ''),
-                dog.get('Size', ''),
+                dog.get('Weight', ''),
                 dog.get('Description', ''),
                 dog.get('Image_URL', ''),
                 dog.get('Rescue_Name', ''),
@@ -142,7 +142,7 @@ def update_sheet_with_dogs(spreadsheet: gspread.Spreadsheet, dogs):
             dog_data.get('Breed', ''),
             dog_data.get('Age', ''),
             dog_data.get('Gender', ''),
-            dog_data.get('Size', ''),
+            dog_data.get('Weight', ''),
             dog_data.get('Description', ''),
             dog_data.get('Image_URL', ''),
             dog_data.get('Rescue_Name', ''),

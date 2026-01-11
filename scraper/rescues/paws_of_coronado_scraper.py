@@ -35,7 +35,7 @@ def pull_paws_of_coronado():
                 'Breed': animal.get('Breed', ''),
                 'Age': unix_to_age(animal.get('DOBUnixTime', 0)),
                 'Gender': animal.get('Sex', ''),
-                'Size': animal.get('Size') or get_size_from_weight(animal.get('CurrentWeightPounds', '')),
+                'Weight': animal.get('CurrentWeightPounds', '').split('.', 1)[0],
                 'Description': animal.get('Description', ''),
                 'Image_URL': animal.get('CoverPhoto', ''),
                 'Rescue_Name': 'Paws of Coronado',
@@ -49,29 +49,6 @@ def pull_paws_of_coronado():
         print(f'Error scraping Paws of Coronado: {e}')
 
     return dogs
-
-
-def get_size_from_weight(weight):
-    '''
-    Determine size category based on weight in pounds
-    '''
-
-    if not weight:
-        return ''
-
-    try:
-        weight_num = float(weight)
-        if weight_num < 25:
-            return 'Small (0-24)'
-        elif weight_num < 60:
-            return 'Medium (25-59)'
-        elif weight_num < 100:
-            return 'Large (60-99)'
-        else:
-            return 'X-Large 99+'
-    except (ValueError, TypeError):
-        return ''
-
 
 def unix_to_age(unix_timestamp):
     '''

@@ -1,8 +1,6 @@
 // Configuration
 const CONFIG = {
-    // TODO: Replace with your published Google Sheet CSV URL
-    // Instructions: File > Share > Publish to web > Select "Comma-separated values (.csv)"
-    SHEET_URL: 'YOUR_GOOGLE_SHEET_CSV_URL_HERE'
+    SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSci-XCd0ne906VzOafwYm2k4P6i32G5dhZNUkvT0qxYGSmjOCpD5VIZ4rVB_fxuuNvBLjf8stmKbBu/pub?gid=0&single=true&output=csv'
 };
 
 let allDogs = [];

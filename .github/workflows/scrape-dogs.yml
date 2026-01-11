@@ -26,5 +26,6 @@ jobs:
     - name: Run scraper
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        PAWS_OF_CORONADO_TOKEN: ${{ secrets.PAWS_OF_CORONADO_TOKEN }}
       run: |
         python scraper/scrape_dogs.py

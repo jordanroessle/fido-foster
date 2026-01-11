@@ -14,7 +14,7 @@ fido-foster-scrap/
 │   ├── requirements.txt             # Python dependencies
 │   └── rescues/
 │       ├── __init__.py
-│       └── rescue_a_scraper.py      # Template for rescue scrapers
+│       └── paws_of_coronado_scraper.py
 ├── docs/                            # GitHub Pages website
 │   ├── index.html                   # Dog listing page
 │   ├── style.css                    # Styling
@@ -25,53 +25,12 @@ fido-foster-scrap/
 
 ## Setup Instructions
 
-### 1. Google Sheets Setup
-
-1. Create a new Google Sheet with these columns:
-   ```
-   Name | Breed | Age | Gender | Size | Location | Description | Image_URL | Rescue_Name | Available | Last_Updated
-   ```
-
-2. Name it "Foster Dogs Database" (or update the name in `scraper/scrape_dogs.py`)
-
-### 2. Google Cloud Setup
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project (e.g., "Foster Dog Scraper")
-3. Enable the **Google Sheets API**
-4. Create a **Service Account**:
-   - Go to "Service Accounts"
-   - Click "Create Service Account"
-   - Name it (e.g., "dog-scraper")
-   - Create and download the JSON key file
-5. Copy the service account email (from the JSON file)
-6. Share your Google Sheet with this email (Editor access)
-
-### 3. GitHub Repository Setup
-
-1. Push this code to a GitHub repository
-2. Add your Google credentials as a secret:
-   - Go to Settings → Secrets and variables → Actions
-   - Click "New repository secret"
-   - Name: `GOOGLE_CREDENTIALS`
-   - Value: Paste the entire contents of the JSON key file
-   - Click "Add secret"
-
 ### 4. Enable GitHub Pages
 
 1. Go to Settings → Pages
 2. Source: "Deploy from a branch"
 3. Branch: `main`, folder: `/docs`
 4. Your site will be live at: `https://yourusername.github.io/fido-foster-scrap/`
-
-### 5. Configure the Display Page
-
-1. Publish your Google Sheet as CSV:
-   - File → Share → Publish to web
-   - Select "Comma-separated values (.csv)"
-   - Copy the URL
-2. Update `docs/app.js`:
-   - Replace `YOUR_GOOGLE_SHEET_CSV_URL_HERE` with your CSV URL
 
 ### 6. Add Rescue Scrapers
 
@@ -99,6 +58,7 @@ pip install -r scraper/requirements.txt
 
 # Set credentials (for local testing)
 export GOOGLE_CREDENTIALS='<paste your JSON here>'
+export PAWS_OF_CORONADO_TOKEN=
 
 # Run scraper
 python scraper/scrape_dogs.py
@@ -132,12 +92,6 @@ python scraper/scrape_dogs.py
 - The display page includes search and filters by default
 - You can add more filters in `docs/index.html` and `docs/app.js`
 
-### Scraper Schedule
-- Edit `.github/workflows/scrape-dogs.yml`
-- Modify the cron schedule (currently daily at 8 AM UTC)
-- Examples:
-  - Twice daily: `'0 8,20 * * *'`
-  - Every 6 hours: `'0 */6 * * *'`
 
 ## Troubleshooting
 
@@ -162,7 +116,3 @@ python scraper/scrape_dogs.py
 - Only store credentials in GitHub Secrets
 - The Google Sheet should be private (only shared with the service account)
 - The published CSV is public - don't include sensitive data
-
-## License
-
-This project is free to use and modify for your needs.

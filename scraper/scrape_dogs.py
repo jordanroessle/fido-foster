@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from rescues.cantu_foundation import pull_cantu_foundation
 from rescues.paws_of_coronado_scraper import pull_paws_of_coronado
-from utils.google_sheet import get_google_sheet, update_sheet_with_dogs
+from utils.google_sheet import get_google_spreadsheet, update_sheet_with_dogs
 
 load_dotenv()
 
@@ -12,7 +12,11 @@ def main():
     print('Starting foster dog scraper...')
 
     # Get Google Sheet
-    sheet = get_google_sheet()
+    try:
+        spreadsheet = get_google_spreadsheet()
+    except Exception as e:
+        print('Failed to grab google sheet exiting', e)
+
 
     # Grab info from all rescue sources
     all_dogs = []
@@ -31,7 +35,7 @@ def main():
 
     # # Update sheet
     if all_dogs:
-        update_sheet_with_dogs(sheet, all_dogs)
+        update_sheet_with_dogs(spreadsheet, all_dogs)
         print('Sheet updated successfully!')
     else:
         print('No dogs found to update')

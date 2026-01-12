@@ -1,9 +1,13 @@
 // Configuration
 const CONFIG = {
-    SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSci-XCd0ne906VzOafwYm2k4P6i32G5dhZNUkvT0qxYGSmjOCpD5VIZ4rVB_fxuuNvBLjf8stmKbBu/pub?gid=0&single=true&output=csv'
+    SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSci-XCd0ne906VzOafwYm2k4P6i32G5dhZNUkvT0qxYGSmjOCpD5VIZ4rVB_fxuuNvBLjf8stmKbBu/pub?gid=0&single=true&output=tsv'
 };
 
 let allDogs = [];
+
+const SMALL_WEIGHT_CUTOFF = 25;
+const MEDIUM_WEIGHT_CUTOFF = 50;
+const LARGE_WEIGHT_CUTOFF = 75;
 
 // Load and display dogs
 async function loadDogs() {
@@ -33,26 +37,23 @@ async function loadDogs() {
     }
 }
 
-// Parse CSV data
+// Parse CSV data (now TSV format)
 function parseCSV(csv) {
     const lines = csv.split('\n');
-    const headers = lines[0].split(',').map(h => h.trim());
+    const headers = lines[0].split('\t').map(h => h.trim());
     const dogs = [];
 
     for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
 
-        const values = lines[i].split(',');
+        const values = lines[i].split('\t');
         const dog = {};
 
         headers.forEach((header, index) => {
             dog[header] = values[index] ? values[index].trim() : '';
         });
 
-        // Only show available dogs
-        if (dog.Available === 'Yes') {
-            dogs.push(dog);
-        }
+        dogs.push(dog)
     }
 
     return dogs;
@@ -84,9 +85,8 @@ function createDogCard(dog) {
                 ${dog.Breed ? `<div class="dog-detail"><strong>Breed:</strong> ${dog.Breed}</div>` : ''}
                 ${dog.Age ? `<div class="dog-detail"><strong>Age:</strong> ${dog.Age}</div>` : ''}
                 ${dog.Gender ? `<div class="dog-detail"><strong>Gender:</strong> ${dog.Gender}</div>` : ''}
-                ${dog.Size ? `<div class="dog-detail"><strong>Size:</strong> ${dog.Size}</div>` : ''}
-                ${dog.Location ? `<div class="dog-detail"><strong>Location:</strong> ${dog.Location}</div>` : ''}
-                ${dog.Description ? `<div class="dog-description">${dog.Description}</div>` : ''}
+                ${dog.Weight ? `<div class="weight-detail"><strong>Weight:</strong> ${dog.Weight} lbs</div>` : ''}
+                ${dog.Description ? `<div class="dog-description">${dog.Description.replaceAll('$$', '<br>')}</div>` : ''}
                 ${dog.Rescue_Name ? `<span class="rescue-badge">${dog.Rescue_Name}</span>` : ''}
             </div>
         </div>
@@ -108,28 +108,51 @@ function populateFilters() {
 
 // Filter dogs based on search and filters
 function filterDogs() {
+    const genderFilter = document.getElementById('gender-filter').value
     const searchTerm = document.getElementById('search').value.toLowerCase();
-    const sizeFilter = document.getElementById('size-filter').value;
+    const weightFilter = document.getElementById('weight-filter').value;
     const rescueFilter = document.getElementById('rescue-filter').value;
 
     const filtered = allDogs.filter(dog => {
+        const matchesGender = !genderFilter || dog.Gender === genderFilter;
+
         const matchesSearch = !searchTerm ||
             dog.Name.toLowerCase().includes(searchTerm) ||
             dog.Breed.toLowerCase().includes(searchTerm) ||
             dog.Description.toLowerCase().includes(searchTerm);
 
-        const matchesSize = !sizeFilter || dog.Size === sizeFilter;
         const matchesRescue = !rescueFilter || dog.Rescue_Name === rescueFilter;
 
-        return matchesSearch && matchesSize && matchesRescue;
+        const weight = parseInt(dog.Weight)
+        let matchesWeight;
+        switch (weightFilter) {
+            case 'Small':
+                matchesWeight = weight <= SMALL_WEIGHT_CUTOFF;
+                break;
+            case 'Medium':
+                matchesWeight = weight <= MEDIUM_WEIGHT_CUTOFF && weight > SMALL_WEIGHT_CUTOFF;
+                break;
+            case 'Large':
+                matchesWeight = weight <= LARGE_WEIGHT_CUTOFF && weight > MEDIUM_WEIGHT_CUTOFF;
+                break;
+            case 'X-Large':
+                matchesWeight = weight > LARGE_WEIGHT_CUTOFF;
+                break;
+            default:
+                matchesWeight = true;
+                break;
+        }
+
+        return matchesGender && matchesSearch && matchesWeight && matchesRescue;
     });
 
     displayDogs(filtered);
 }
 
 // Event listeners
+document.getElementById('gender-filter').addEventListener('change', filterDogs)
 document.getElementById('search').addEventListener('input', filterDogs);
-document.getElementById('size-filter').addEventListener('change', filterDogs);
+document.getElementById('weight-filter').addEventListener('change', filterDogs);
 document.getElementById('rescue-filter').addEventListener('change', filterDogs);
 
 // Load dogs on page load

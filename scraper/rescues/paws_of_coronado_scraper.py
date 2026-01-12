@@ -30,7 +30,7 @@ def pull_paws_of_coronado():
 
             # Build description from published attributes
             attributes = animal.get('Attributes', [])
-            description = '\n'.join(
+            description = '$$'.join(
                 attr.get('AttributeName', '')
                 for attr in attributes
                 if attr.get('Publish') == 'Yes' and attr.get('AttributeName')

@@ -24,22 +24,27 @@ def pull_paws_of_coronado():
         animals = response.json()['animals']
 
         for animal in animals:
-            # Dogs only
-            if animal.get('Type', '') != 'Dog':
-                continue
-            if animal.get('InFoster', ''):
+            # Dogs only, skip in foster, skip Lifetime Care Program
+            if animal.get('Type', '') != 'Dog' or animal.get('InFoster', '') or animal.get('Status', '') == 'Lifetime Care Program':
                 continue
 
+            # Build description from published attributes
+            attributes = animal.get('Attributes', [])
+            description = '\n'.join(
+                attr.get('AttributeName', '')
+                for attr in attributes
+                if attr.get('Publish') == 'Yes' and attr.get('AttributeName')
+            )
             dog = {
                 'Name': animal.get('Name', ''),
                 'Breed': animal.get('Breed', ''),
                 'Age': unix_to_age(animal.get('DOBUnixTime', 0)),
                 'Gender': animal.get('Sex', ''),
                 'Weight': animal.get('CurrentWeightPounds', '').split('.', 1)[0],
-                'Description': animal.get('Description', ''),
+                'Description': description,
                 'Image_URL': animal.get('CoverPhoto', ''),
                 'Rescue_Name': 'Paws of Coronado',
-                'Their_Id': animal.get('ID', '')
+                'Their_Id': animal.get('Internal-ID', '')
             }
             dogs.append(dog)
 

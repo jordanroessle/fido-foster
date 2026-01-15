@@ -141,16 +141,16 @@ header {
 
 .foster-button-link {
     margin-top: auto;
-    align-self: flex-start;
+    align-self: center;
 }
 
 .foster-button {
     display: inline-block;
     background-color: var(--primary-color);
     color: white;
-    padding: 4px 12px;
+    padding: 8px 20px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .hidden {

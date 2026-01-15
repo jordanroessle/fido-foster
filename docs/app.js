@@ -88,7 +88,7 @@ function createDogCard(dog) {
                 ${dog.Gender ? `<div class="dog-detail"><strong>Gender:</strong> ${dog.Gender}</div>` : ''}
                 ${dog.Weight ? `<div class="dog-detail"><strong>Weight:</strong> ${dog.Weight} lbs</div>` : ''}
                 ${dog.Rescue_Name ? `<div class="dog-detail-underline"><strong>Rescue:</strong> ${dog.Rescue_Name}</div>` : ''}
-                ${dog.Description ? `<div class="dog-description">${dog.Description.replaceAll('$$', '<br>')}</div>` : ''}
+                <div class="dog-description">${dog.Description ? dog.Description.replaceAll('$$', '<br>') : `Contact us for further information on ${dog.Name}'s personality`}</div>
                 <a href="${FOSTER_MATCHING_URL}" target="_blank" class="foster-button-link"><span class="foster-button">Foster ${dog.Name}</span></a>
             </div>
         </div>

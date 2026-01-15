@@ -6,10 +6,16 @@ from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+CURRENT_SHEET_NAME = 'Current'
+ARCHIVE_SHEET_NAME = 'Archive'
+LOGS_SHEET_NAME = 'Logs'
 
 def get_google_spreadsheet():
     '''
     Authenticate and return the Google Sheet.
+    Uses ENVIRONMENT variable to determine which sheet to use:
+    - 'production' or unset: uses production sheet
+    - 'development': uses test sheet
     '''
 
     creds_json = os.getenv('GOOGLE_CREDENTIALS')
@@ -26,14 +32,24 @@ def get_google_spreadsheet():
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
 
-    spreadsheet = client.open('Fido Foster Dogs Database')
+    # Determine which spreadsheet to use based on environment
+    environment = os.getenv('ENVIRONMENT', 'development').lower()
+
+    if environment == 'production':
+        sheet_name = 'Fido Foster Dogs Database'
+        print(f'Using PRODUCTION sheet: {sheet_name}')
+    else:
+        sheet_name = os.getenv('DEV_SHEET_NAME', 'Fido Foster Dogs Database - TEST')
+        print(f'Using DEVELOPMENT sheet: {sheet_name}')
+
+    spreadsheet = client.open(sheet_name)
     return spreadsheet
 
 def update_sheet_with_dogs(spreadsheet: gspread.Spreadsheet, dogs):
     '''Update Google Sheet with scraped dog data.'''
-    current = spreadsheet.get_worksheet(0)
-    archive = spreadsheet.get_worksheet(1)
-    logs = spreadsheet.get_worksheet(2)
+    current = spreadsheet.worksheet(CURRENT_SHEET_NAME)
+    archive = spreadsheet.worksheet(ARCHIVE_SHEET_NAME)
+    logs = spreadsheet.worksheet(LOGS_SHEET_NAME)
     existing_dogs = current.get_all_records()
 
     # Build lookup dictionary using composite key: (Their_Id, Rescue_Name) -> (index, dog_data)

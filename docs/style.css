@@ -63,7 +63,7 @@ header {
     color: #e74c3c;
 }
 
-#dogs-grid {
+#dogs-grid, #activities-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
@@ -158,7 +158,7 @@ header {
 }
 
 @media (max-width: 768px) {
-    #dogs-grid {
+    #dogs-grid, #activities-grid {
         grid-template-columns: 1fr;
     }
 

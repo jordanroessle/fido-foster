@@ -4,11 +4,16 @@
     box-sizing: border-box;
 }
 
+:root {
+    --background-color: #FFFCF7;
+    --primary-color: #607FC6;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f5f5f5;
+    background-color: var(--background-color);
 }
 
 .container {
@@ -20,11 +25,6 @@ body {
 header {
     text-align: center;
     margin-bottom: 40px;
-}
-
-h1 {
-    color: #2c3e50;
-    margin-bottom: 20px;
 }
 
 .filters {
@@ -40,10 +40,17 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
+    background-color: var(--primary-color);
+    color: white;
 }
 
 #search {
     min-width: 250px;
+    color: white;
+}
+
+#search::placeholder {
+    color: white;
 }
 
 #loading, #error {
@@ -113,14 +120,15 @@ h1 {
     color: #555;
 }
 
-.weight-detail {
+.dog-detail-underline {
     margin: 4px 0;
     color: #555;
     padding-bottom: 8px;
     border-bottom: 1px solid #eee;
 }
 
-.dog-detail strong {
+.dog-detail strong,
+.dog-detail-underline strong {
     color: #333;
 }
 
@@ -131,15 +139,18 @@ h1 {
     line-height: 1.5;
 }
 
-.rescue-badge {
+.foster-button-link {
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+.foster-button {
     display: inline-block;
-    background-color: #3498db;
+    background-color: var(--primary-color);
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
-    margin-top: auto;
-    align-self: flex-start;
 }
 
 .hidden {

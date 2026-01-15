@@ -8,6 +8,7 @@ let allDogs = [];
 const SMALL_WEIGHT_CUTOFF = 25;
 const MEDIUM_WEIGHT_CUTOFF = 50;
 const LARGE_WEIGHT_CUTOFF = 75;
+const FOSTER_MATCHING_URL = 'https://www.fidofostercommunity.org/fostermatchingform';
 
 // Load and display dogs
 async function loadDogs() {
@@ -85,9 +86,10 @@ function createDogCard(dog) {
                 ${dog.Breed ? `<div class="dog-detail"><strong>Breed:</strong> ${dog.Breed}</div>` : ''}
                 ${dog.Age ? `<div class="dog-detail"><strong>Age:</strong> ${dog.Age}</div>` : ''}
                 ${dog.Gender ? `<div class="dog-detail"><strong>Gender:</strong> ${dog.Gender}</div>` : ''}
-                ${dog.Weight ? `<div class="weight-detail"><strong>Weight:</strong> ${dog.Weight} lbs</div>` : ''}
+                ${dog.Weight ? `<div class="dog-detail"><strong>Weight:</strong> ${dog.Weight} lbs</div>` : ''}
+                ${dog.Rescue_Name ? `<div class="dog-detail-underline"><strong>Rescue:</strong> ${dog.Rescue_Name}</div>` : ''}
                 ${dog.Description ? `<div class="dog-description">${dog.Description.replaceAll('$$', '<br>')}</div>` : ''}
-                ${dog.Rescue_Name ? `<span class="rescue-badge">${dog.Rescue_Name}</span>` : ''}
+                <a href="${FOSTER_MATCHING_URL}" target="_blank" class="foster-button-link"><span class="foster-button">Foster ${dog.Name}</span></a>
             </div>
         </div>
     `;

@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 from dateutil.relativedelta import relativedelta
 
-SKIP_STATUSES = ['Lifetime Care Program', 'Stray Hold', 'Id Trace', 'Foster to Adopt ',  'Behavior Hold', 'Medical Hold', 'Awaiting Behavior Assessment', 'Protective Custody']
+ACCPETABLE_STATUSES = ['Available In-Shelter']
 
 def pull_paws_of_coronado():
     '''
@@ -26,23 +26,16 @@ def pull_paws_of_coronado():
 
         for animal in animals:
             # Dogs only, skip in foster, skip Lifetime Care Program
-            if animal.get('Type', '') != 'Dog' or animal.get('InFoster', '') or animal.get('Status', '') in SKIP_STATUSES:
+            if animal.get('Type', '') != 'Dog' or animal.get('InFoster', '') or animal.get('Status', '') not in ACCPETABLE_STATUSES:
                 continue
 
-            # Build description from published attributes
-            attributes = animal.get('Attributes', [])
-            description = '$$'.join(
-                attr.get('AttributeName', '')
-                for attr in attributes
-                if attr.get('Publish') == 'Yes' and attr.get('AttributeName')
-            )
             dog = {
                 'Name': animal.get('Name', ''),
                 'Breed': animal.get('Breed', ''),
                 'Age': unix_to_age(animal.get('DOBUnixTime', 0)),
                 'Gender': animal.get('Sex', ''),
                 'Weight': animal.get('CurrentWeightPounds', '').split('.', 1)[0],
-                'Description': description,
+                'Description': animal.get('Description', '').replace('\n', '$$'),
                 'Image_URL': animal.get('CoverPhoto', ''),
                 'Rescue_Name': 'Paws of Coronado',
                 'Their_Id': animal.get('Internal-ID', '')

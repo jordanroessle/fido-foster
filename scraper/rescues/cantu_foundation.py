@@ -12,7 +12,6 @@ def pull_cantu_foundation():
 
     dogs = []
 
-    # The actual dog listings are in this iframe
     url = 'https://www.thecantufoundation.org/foster'
 
     try:
@@ -20,7 +19,7 @@ def pull_cantu_foundation():
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
 
-        animals = soup.find_all('div',class_='sqs-gallery-design-autogrid-slide')
+        animals = soup.find_all('div', class_='sqs-gallery-design-autogrid-slide')
         for animal in animals:
             title_link = animal.find('a', class_='summary-title-link')
             name = title_link.text.strip().title()

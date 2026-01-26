@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 from dateutil.relativedelta import relativedelta
 
+SKIP_STATUSES = ['Lifetime Care Program', 'Stray Hold', 'Id Trace', 'Foster to Adopt ',  'Behavior Hold', 'Medical Hold', 'Awaiting Behavior Assessment', 'Protective Custody']
 
 def pull_paws_of_coronado():
     '''
@@ -25,7 +26,7 @@ def pull_paws_of_coronado():
 
         for animal in animals:
             # Dogs only, skip in foster, skip Lifetime Care Program
-            if animal.get('Type', '') != 'Dog' or animal.get('InFoster', '') or animal.get('Status', '') == 'Lifetime Care Program':
+            if animal.get('Type', '') != 'Dog' or animal.get('InFoster', '') or animal.get('Status', '') in SKIP_STATUSES:
                 continue
 
             # Build description from published attributes

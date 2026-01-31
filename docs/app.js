@@ -70,6 +70,8 @@ function displayDogs(dogs) {
     }
 
     gridEl.innerHTML = dogs.map(dog => createDogCard(dog)).join('');
+
+    requestAnimationFrame(() => hideUnnecessaryShowMoreButtons());
 }
 
 // Create HTML for dog card
@@ -88,7 +90,8 @@ function createDogCard(dog) {
                 ${dog.Gender ? `<div class="dog-detail"><strong>Gender:</strong> ${dog.Gender}</div>` : ''}
                 ${dog.Weight ? `<div class="dog-detail"><strong>Weight:</strong> ${dog.Weight} lbs</div>` : ''}
                 ${dog.Rescue_Name ? `<div class="dog-detail-underline"><strong>Rescue:</strong> ${dog.Rescue_Name}</div>` : ''}
-                <div class="dog-description">${dog.Description ? dog.Description.replaceAll('$$', '<br>') : `Contact us for further information on ${dog.Name}'s personality`}</div>
+                <div class="dog-description truncated">${dog.Description ? dog.Description.replaceAll('$$', '<br>') : `Contact us for further information on ${dog.Name}'s personality`}</div>
+                <button class="show-more-btn" onclick="toggleDescription(this)">Show more</button>
                 <a href="${FOSTER_MATCHING_URL}" target="_blank" class="foster-button-link"><span class="foster-button">Foster ${dog.Name}</span></a>
             </div>
         </div>
@@ -156,6 +159,35 @@ document.getElementById('gender-filter').addEventListener('change', filterDogs)
 document.getElementById('search').addEventListener('input', filterDogs);
 document.getElementById('weight-filter').addEventListener('change', filterDogs);
 document.getElementById('rescue-filter').addEventListener('change', filterDogs);
+
+function toggleDescription(btn) {
+    const description = btn.previousElementSibling;
+    const isExpanded = description.classList.contains('expanded');
+
+    if (isExpanded) {
+        description.classList.remove('expanded');
+        description.classList.add('truncated');
+        btn.textContent = 'Show more';
+    } else {
+        description.classList.remove('truncated');
+        description.classList.add('expanded');
+        btn.textContent = 'Show less';
+    }
+}
+
+function hideUnnecessaryShowMoreButtons() {
+    document.querySelectorAll('.dog-description.truncated').forEach(desc => {
+        const btn = desc.nextElementSibling;
+        if (btn && btn.classList.contains('show-more-btn')) {
+            // Check if content is actually truncated
+            if (desc.scrollHeight <= desc.clientHeight) {
+                btn.style.display = 'none';
+            } else {
+                btn.style.display = 'block';
+            }
+        }
+    });
+}
 
 // Load dogs on page load
 loadDogs();

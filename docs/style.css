@@ -134,9 +134,35 @@ header {
 
 .dog-description {
     margin-top: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     color: #666;
     line-height: 1.5;
+}
+
+.dog-description.truncated {
+    display: -webkit-box;
+    line-clamp: 4;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.dog-description.expanded {
+    display: block;
+}
+
+.show-more-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    margin-bottom: 16px;
+}
+
+.show-more-btn:hover {
+    text-decoration: underline;
 }
 
 .foster-button-link {

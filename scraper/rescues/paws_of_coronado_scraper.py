@@ -14,6 +14,7 @@ def pull_paws_of_coronado():
         list: List of dictionaries containing dog information
     '''
 
+    rescue_name = 'Paws of Coronado'
     dogs = []
     url = 'https://new.shelterluv.com/api/v1/animals'
     token = os.getenv('PAWS_OF_CORONADO_TOKEN')
@@ -37,15 +38,15 @@ def pull_paws_of_coronado():
                 'Weight': animal.get('CurrentWeightPounds', '').split('.', 1)[0],
                 'Description': animal.get('Description', '').replace('\n', '$$'),
                 'Image_URL': animal.get('CoverPhoto', ''),
-                'Rescue_Name': 'Paws of Coronado',
+                'Rescue_Name': rescue_name,
                 'Their_Id': animal.get('Internal-ID', '')
             }
             dogs.append(dog)
 
-        print(f'Scraped {len(dogs)} dogs from Paws of Coronado')
+        print(f'Scraped {len(dogs)} dogs from {rescue_name}')
 
     except requests.RequestException as e:
-        print(f'Error scraping Paws of Coronado: {e}')
+        print(f'Error scraping {rescue_name}: {e}')
 
     return dogs
 

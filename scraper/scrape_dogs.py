@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from rescues.cantu_foundation import pull_cantu_foundation
+from rescues.mother_of_dragons import pull_mother_of_dragons
 from rescues.paws_of_coronado_scraper import pull_paws_of_coronado
 from rescues.road_to_freedom import pull_road_to_freedom
 from utils.google_sheet import get_google_spreadsheet, update_sheet_with_dogs
@@ -33,8 +34,19 @@ def main():
     all_dogs.extend(cantu_foundation_dogs)
 
     # Road to Freedom
+    print('Pulling from Road to Freedom')
     road_to_freedom = pull_road_to_freedom()
     all_dogs.extend(road_to_freedom)
+
+    # # Amazing Strays
+    # print('Pulling from Amazing Strays')
+    # amazing_strays = pull_amazing_strays()
+    # all_dogs.extend(amazing_strays)
+
+    # Mother of Dragons
+    print('Pulling from Mother of Dragons')
+    mother_of_dragons = pull_mother_of_dragons()
+    all_dogs.extend(mother_of_dragons)
 
     print(f'Total dogs info grabbed: {len(all_dogs)}')
 

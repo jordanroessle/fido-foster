@@ -1,6 +1,5 @@
 // Configuration
 const CONFIG = {
-    // Update this URL to point to your activities sheet
     SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSci-XCd0ne906VzOafwYm2k4P6i32G5dhZNUkvT0qxYGSmjOCpD5VIZ4rVB_fxuuNvBLjf8stmKbBu/pub?gid=1773829289&single=true&output=tsv'
 }
 let allActivities = [];
@@ -9,7 +8,6 @@ let allActivities = [];
 async function loadActivities() {
     const loadingEl = document.getElementById('loading');
     const errorEl = document.getElementById('error');
-    const gridEl = document.getElementById('activities-grid');
 
     try {
         loadingEl.style.display = 'block';

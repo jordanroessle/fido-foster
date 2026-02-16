@@ -1,88 +1,48 @@
-import requests
-from bs4 import BeautifulSoup
+from utils.google_sheet import get_google_spreadsheet
 
 
 def pull_cantu_foundation():
     '''
-    Scrape foster dogs from Cantu Foundation
+    Scrape foster dogs from Cantu Foundation.
 
     Returns:
         list: List of dictionaries containing dog information
     '''
 
+    rescue_name = 'Cantu Foundation'
     dogs = []
-
-    url = 'https://www.thecantufoundation.org/foster'
+    spreadsheet_name = 'TCF x Fido spreadsheet'
+    stop_at = 'DOGS IN SAN DIEGO'
 
     try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
+        spreadsheet = get_google_spreadsheet(spreadsheet_name)
+        print(f'Successfully accessed spreadsheet: {spreadsheet_name}')
+        worksheet = spreadsheet.sheet1
+        rows = worksheet.get_all_records()
 
-        animals = soup.find_all('div', class_='sqs-gallery-design-autogrid-slide')
-        for animal in animals:
-            title_link = animal.find('a', class_='summary-title-link')
-            name = title_link.text.strip().title()
+        for row in rows:
+            name = row.get('ƒ', '')
+            if name == stop_at:
+                break
 
-            # Extract ID from URL (e.g., '/fosterdogs/dotty' -> 'dotty')
-            dog_url = title_link['href']
-            dog_id = dog_url.split('/')[-1]
+            has_foster = row.get('Foster lined up', '').strip().lower()
+            note_for_website = row.get('Notes for website ', '').strip().lower()
+            if has_foster == '' and note_for_website != '':
+                dog = {
+                    'Name': name,
+                    'Breed': row.get('Breed', ''),
+                    'Age': row.get('Age ', ''),
+                    'Gender': row.get('Gender', ''),
+                    'Weight': row.get('Weight', ''),
+                    'Description': note_for_website,
+                    'Image_URL': row.get('Image', ''),
+                    'Rescue_Name': rescue_name,
+                    'Their_Id': f'{name}_{row.get("Fur Color", "")}'
+                }
+                dogs.append(dog)
+        print(f'Scraped {len(dogs)} dogs from {rescue_name}')
 
-            photo = animal.find('img')['data-src']
-            more_info = animal.find('div', class_='summary-excerpt').text
-            # Remove zero-width characters
-            for char in ['\u200b', '\u200c', '\u200d', '\u200e', '\u200f']:
-                more_info = more_info.replace(char, '')
-            more_info = more_info.strip()
-
-            # Parse the more_info text
-            age = ''
-            gender = ''
-            weight = ''
-            breed = ''
-            description = ''
-
-            # Split from the end backwards to avoid issues with missing fields
-            if 'More about me:' in more_info:
-                first_split = more_info.split('More about me:', 1)
-                description = first_split[1].strip()
-                fields_text = first_split[0]
-            else:
-                fields_text = more_info
-
-            if 'Breed:' in fields_text:
-                second_split = fields_text.split('Breed:', 1)
-                breed = second_split[1].strip().title()
-                fields_text = second_split[0]
-
-            if 'Size:' in fields_text:
-                third_split = fields_text.split('Size:', 1)
-                weight = third_split[1].split('lbs', 1)[0].strip()
-                fields_text = third_split[0]
-
-            if 'Gender:' in fields_text:
-                fourth_split = fields_text.split('Gender:', 1)
-                gender = fourth_split[1].strip().title()
-                fields_text = fourth_split[0]
-
-            if 'Age:' in fields_text:
-                fifth_split = fields_text.split('Age:', 1)
-                age = fifth_split[1].strip()
-
-            dogs.append({
-                'Name': name,
-                'Breed': breed,
-                'Age': age,
-                'Gender': gender,
-                'Weight': weight,
-                'Description': description,
-                'Image_URL': photo,
-                'Rescue_Name': 'Cantu Foundation',
-                'Their_Id': dog_id
-            })
-
-        print(f'Scraped {len(dogs)} dogs from Cantu Foundation')
     except Exception as e:
-        print(f'Error scraping Cantu Foundation: {e}')
-
+        print(f'Error accessing spreadsheet: {repr(e)}')
+        return []
     return dogs

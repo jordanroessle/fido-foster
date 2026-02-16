@@ -14,7 +14,6 @@ const FOSTER_MATCHING_URL = 'https://www.fidofostercommunity.org/fostermatchingf
 async function loadDogs() {
     const loadingEl = document.getElementById('loading');
     const errorEl = document.getElementById('error');
-    const gridEl = document.getElementById('dogs-grid');
 
     try {
         loadingEl.style.display = 'block';

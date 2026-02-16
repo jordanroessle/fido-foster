@@ -10,7 +10,7 @@ CURRENT_SHEET_NAME = 'Current'
 ARCHIVE_SHEET_NAME = 'Archive'
 LOGS_SHEET_NAME = 'Logs'
 
-def get_google_spreadsheet():
+def get_google_spreadsheet(sheet_name=None):
     '''
     Authenticate and return the Google Sheet.
     Uses ENVIRONMENT variable to determine which sheet to use:
@@ -27,13 +27,18 @@ def get_google_spreadsheet():
 
     scope = [
         'https://spreadsheets.google.com/feeds',
-        'https://www.googleapis.com/auth/drive'
+        'https://www.googleapis.com/auth/drive',
     ]
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
 
     # Determine which spreadsheet to use based on environment
     environment = os.getenv('ENVIRONMENT', 'development').lower()
+
+    if sheet_name:
+        print(f'Using specified sheet: {sheet_name}')
+        spreadsheet = client.open(sheet_name)
+        return spreadsheet
 
     if environment == 'production':
         sheet_name = 'Fido Foster Dogs Database'
@@ -121,11 +126,12 @@ def update_sheet_with_dogs(spreadsheet: gspread.Spreadsheet, dogs):
         has_changes = (
             existing_dog.get('Name', '') != dog.get('Name', '') or
             existing_dog.get('Breed', '') != dog.get('Breed', '') or
-            existing_dog.get('Age', '') != dog.get('Age', '') or
+            str(existing_dog.get('Age', '')) != str(dog.get('Age', '')) or
             existing_dog.get('Gender', '') != dog.get('Gender', '') or
-            str(existing_dog.get('Weight', '')) != dog.get('Weight', '') or
+            str(existing_dog.get('Weight', '')) != str(dog.get('Weight', '')) or
             existing_dog.get('Description', '') != dog.get('Description', '') or
-            existing_dog.get('Image_URL', '') != dog.get('Image_URL', '')
+            (existing_dog.get('Image_URL', '') != dog.get('Image_URL', '') and
+            dog.get('Image_URL', '') != '') # Only consider it a change if the new data has an image URL (don't overwrite with blank)
         )
 
         if has_changes:

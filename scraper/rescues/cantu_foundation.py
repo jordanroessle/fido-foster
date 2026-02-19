@@ -13,6 +13,7 @@ def pull_cantu_foundation():
     dogs = []
     spreadsheet_name = 'TCF x Fido spreadsheet'
     stop_at = 'DOGS IN SAN DIEGO'
+    name_header = '' # IMPORTRANGE doesn't pull the header, so we have to use a blank column as the name key
 
     try:
         spreadsheet = get_google_spreadsheet(spreadsheet_name)
@@ -21,7 +22,7 @@ def pull_cantu_foundation():
         rows = worksheet.get_all_records()
 
         for row in rows:
-            name = row.get('ƒ', '')
+            name = row.get(name_header, '')
             if name == stop_at:
                 break
 
